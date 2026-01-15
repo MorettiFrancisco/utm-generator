@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoLink Pro - Constructor WhatsApp para Concesionarias</title>
+    <meta name="description" content="Constructor de URLs WhatsApp para concesionarias de autos.">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --violeta-oscuro-primario: #301b5a;
+            --violeta-claro-primario: #4A1FCC;
+            --verde-secundario: #79D2A3;
+            --celeste-secundario: #A4E4EE;
+            --amarillo-acento: #FDEF9F;
+            --whatsapp-green: #00D856;
+            --text-primary: var(--violeta-oscuro-primario);
+            --text-light: #FFFFFF;
+            --gradient-primary: linear-gradient(135deg, var(--violeta-oscuro-primario) 0%, var(--violeta-claro-primario) 50%, var(--verde-secundario) 100%);
+            --gradient-glass: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%);
+            --shadow-elevation: 0 25px 50px -12px rgba(48, 27, 90, 0.25);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Syne', sans-serif;
+            background: var(--violeta-oscuro-primario);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--gradient-primary); background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite; z-index: -1;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
+        }
+
+        .main-container {
+            position: relative; max-width: 1600px; margin: 0 auto; padding: 2rem;
+            min-height: 100vh; display: grid; grid-template-columns: 1fr 400px; gap: 3rem; align-items: start;
+        }
+
+        .constructor-section { animation: slideInLeft 1s ease; }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+
+        .preview-section { position: sticky; top: 2rem; animation: slideInRight 1s ease 0.3s both; }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+        .hero-section { text-align: center; margin-bottom: 3rem; animation: heroFadeIn 1s ease; }
+        @keyframes heroFadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif; font-size: clamp(3rem, 6vw, 6rem);
+            font-weight: 700; line-height: 1; color: var(--text-light);
+            margin-bottom: 1rem; text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle { font-size: 1.3rem; color: var(--celeste-secundario); margin-bottom: 2rem; }
+
+        .constructor-card {
+            background: var(--gradient-glass); backdrop-filter: blur(40px); border-radius: 32px;
+            padding: 3rem; border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-elevation); max-width: 800px; margin: 0 auto;
+            animation: cardSlideUp 1s ease 0.3s both;
+        }
+        @keyframes cardSlideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-section { margin-bottom: 2.5rem; }
+
+        .section-title {
+            font-size: 1.5rem; font-weight: 700; color: var(--soft-cream);
+            margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;
+        }
+        .section-title::before {
+            content: ''; width: 4px; height: 30px;
+            background: linear-gradient(135deg, var(--accent-electric), var(--accent-coral)); border-radius: 2px;
+        }
+
+        .form-group { margin-bottom: 2rem; animation: formSlide 0.6s ease both; position: relative; }
+        
+        /* CORRECCION IMPORTANTE: Z-INDEX ALTO PARA EL PRIMER GRUPO (TELEFONO) */
+        .form-group:nth-child(2) { z-index: 50; animation-delay: 0.1s; } 
+        /* Los demas grupos con z-index menor para quedar abajo */
+        .form-group:nth-child(3) { z-index: 10; animation-delay: 0.2s; } 
+        
+        @keyframes formSlide { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+
+        .form-label {
+            display: block; margin-bottom: 0.75rem; font-weight: 600; color: var(--text-light);
+            font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%; padding: 1.25rem 1.5rem; border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; font-size: 1rem; font-family: 'JetBrains Mono', monospace;
+            font-weight: 400; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); color: var(--text-light);
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: var(--celeste-secundario); font-family: 'Syne', sans-serif; opacity: 0.6;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none; border-color: var(--verde-secundario); background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 30px rgba(121, 210, 163, 0.3); transform: translateY(-2px); position: relative; z-index: 2;
+        }
+
+        /* --- ESTILOS CORREGIDOS DEL SELECTOR --- */
+        .phone-input-group {
+            display: flex; gap: 0; 
+            position: relative; 
+            z-index: 100; /* Forzamos que este grupo esté encima de todo */
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+            width: 140px;
+            user-select: none;
+            z-index: 101; /* El wrapper encima del input */
+        }
+
+        .custom-select-trigger {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.25rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-right: none;
+            border-radius: 20px 0 0 20px;
+            color: var(--text-light);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .custom-select-trigger:hover { background: rgba(255, 255, 255, 0.1); }
+        
+        .arrow { transition: transform 0.3s; font-size: 10px; margin-left: 5px; color: var(--celeste-secundario); }
+        .custom-select-wrapper.open .arrow { transform: rotate(180deg); }
+
+        /* LISTA DESPLEGABLE CORREGIDA */
+        .custom-options {
+            position: absolute;
+            top: 100%; /* Pegado justo abajo */
+            left: 0;
+            width: 280px; 
+            /* IMPORTANTE: Fondo sólido oscuro para que no se vea lo de atrás */
+            background: #301b5a; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            /* Sombra fuerte para darle profundidad y separarlo del fondo */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            z-index: 999; /* Indice muy alto para tapar todo */
+            opacity: 0; visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            margin-top: 8px;
+        }
+
+        .custom-select-wrapper.open .custom-options {
+            opacity: 1; visibility: visible; transform: translateY(0);
+        }
+
+        .select-search-container {
+            padding: 10px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .select-search {
+            width: 100%; padding: 8px 12px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
+            color: white; font-family: 'Syne', sans-serif; font-size: 13px;
+        }
+        .select-search:focus { outline: none; border-color: var(--verde-secundario); }
+
+        .options-list { max-height: 250px; overflow-y: auto; }
+        .options-list::-webkit-scrollbar { width: 4px; }
+        .options-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+        .custom-option {
+            padding: 12px 15px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 10px;
+            color: rgba(255,255,255,0.9); font-size: 13px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .custom-option:hover { background: var(--violeta-claro-primario); color: white; padding-left: 18px; }
+        .custom-option.selected { background: rgba(121, 210, 163, 0.15); color: var(--verde-secundario); font-weight: bold;}
+
+        .phone-input-split {
+            flex-grow: 1; border-radius: 0 20px 20px 0; border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* --------------------------------------------- */
+
+        .form-textarea { min-height: 120px; font-family: 'Syne', sans-serif; line-height: 1.6; resize: none; }
+
+        .url-section {
+            background: linear-gradient(145deg, rgba(121, 210, 163, 0.1), rgba(164, 228, 238, 0.05));
+            border-radius: 24px; padding: 2.5rem; border: 1px solid rgba(121, 210, 163, 0.2); margin: 2rem 0;
+            position: relative; z-index: 1;
+        }
+
+        .utm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+
+        .generate-btn {
+            width: 100%; background: linear-gradient(135deg, var(--amarillo-acento), #F0E68C);
+            color: var(--violeta-oscuro-primario); border: none; border-radius: 20px;
+            padding: 1.5rem 2rem; font-size: 1.2rem; font-weight: 700; font-family: 'Syne', sans-serif;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 2rem;
+            text-transform: uppercase; letter-spacing: 1px; position: relative; overflow: hidden;
+        }
+        .generate-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); transition: left 0.6s;
+        }
+        .generate-btn:hover::before { left: 100%; }
+        .generate-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 40px rgba(253, 239, 159, 0.4); }
+
+        .result-section {
+            margin-top: 3rem; padding: 2rem; background: var(--gradient-glass);
+            border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none; animation: resultFadeIn 0.6s ease;
+        }
+        @keyframes resultFadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .result-title { font-size: 1.5rem; font-weight: 700; color: var(--text-light); margin-bottom: 1rem; }
+
+        .url-display {
+            background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 16px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; word-break: break-all;
+            color: #FFFFFF; border: 1px solid rgba(255, 255, 255, 0.3);
+            line-height: 1.5; margin-bottom: 1.5rem;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, var(--verde-secundario), #5BC17F); color: white;
+            border: none; border-radius: 12px; padding: 1rem 2rem; font-size: 1rem; font-weight: 600;
+            font-family: 'Syne', sans-serif; cursor: pointer; transition: all 0.3s ease;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-right: 1rem; margin-bottom: 1rem;
+        }
+        .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(121, 210, 163, 0.4); }
+
+        .test-btn {
+            background: linear-gradient(135deg, var(--celeste-secundario), #7DD3F0);
+            color: var(--violeta-oscuro-primario); border: none; border-radius: 12px;
+            padding: 1rem 2rem; font-size: 1rem; font-weight: 600; font-family: 'Syne', sans-serif;
+            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 1rem;
+        }
+        .test-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(164, 228, 238, 0.4); }
+
+        /* WhatsApp Preview */
+        .whatsapp-preview { background: transparent; padding: 0; transform: none; transition: none; }
+        .whatsapp-preview:hover { transform: none; }
+
+        .phone-frame {
+            width: 300px; height: 600px; background: linear-gradient(145deg, #1c1c1e 0%, #000000 100%);
+            border-radius: 40px; padding: 4px;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative; margin: 0 auto;
+        }
+        .phone-frame::before { content: ''; position: absolute; top: 120px; left: -3px; width: 3px; height: 35px; background: linear-gradient(180deg, #2c2c2e, #1c1c1e); border-radius: 0 3px 3px 0; }
+        .phone-frame::after { content: ''; position: absolute; top: 170px; left: -3px; width: 3px; height: 60px; background: linear-gradient(180deg, #2c2c2e, #1c1c1e); border-radius: 0 3px 3px 0; }
+        .volume-up { position: absolute; top: 240px; left: -3px; width: 3px; height: 35px; background: linear-gradient(180deg, #2c2c2e, #1c1c1e); border-radius: 0 3px 3px 0; }
+        .power-button { position: absolute; top: 180px; right: -3px; width: 3px; height: 60px; background: linear-gradient(180deg, #2c2c2e, #1c1c1e); border-radius: 3px 0 0 3px; }
+
+        .phone-screen {
+            width: 100%; height: 100%; background: #000000; border-radius: 36px;
+            overflow: hidden; position: relative; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        .phone-screen::before {
+            content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+            width: 130px; height: 30px; background: #000000; border-radius: 0 0 20px 20px;
+            z-index: 100; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .phone-screen::after {
+            content: ''; position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 6px; background: #1c1c1e; border-radius: 3px; z-index: 101;
+        }
+
+        .status-bar {
+            background: #075E54; height: 48px; display: flex; align-items: center;
+            justify-content: space-between; color: white; font-size: 14px; font-weight: 600;
+            padding: 0 16px; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            margin-top: 44px;
+        }
+        .status-left { display: flex; align-items: center; gap: 4px; }
+        .status-right { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+        .signal-bars { display: flex; gap: 2px; align-items: flex-end; }
+        .signal-bars span { width: 3px; background: white; border-radius: 1px; }
+        .signal-bars span:nth-child(1) { height: 4px; } .signal-bars span:nth-child(2) { height: 6px; }
+        .signal-bars span:nth-child(3) { height: 8px; } .signal-bars span:nth-child(4) { height: 10px; }
+        .wifi-icon { width: 15px; height: 11px; position: relative; }
+        .wifi-icon::before { content: ''; position: absolute; top: 0; left: 0; width: 15px; height: 11px; background: white; clip-path: polygon(50% 100%, 0 0, 100% 0); border-radius: 50% 50% 0 0; }
+        .battery { width: 24px; height: 12px; border: 1px solid white; border-radius: 2px; position: relative; }
+        .battery::before { content: ''; position: absolute; right: -3px; top: 3px; width: 2px; height: 6px; background: white; border-radius: 0 1px 1px 0; }
+        .battery::after { content: ''; position: absolute; top: 1px; left: 1px; width: 18px; height: 8px; background: #30D158; border-radius: 1px; }
+
+        .chat-header {
+            background: #075E54; padding: 12px 16px; display: flex; align-items: center;
+            gap: 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .back-arrow { color: white; font-size: 20px; cursor: pointer; }
+        .contact-avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;
+            font-size: 16px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; flex-shrink: 0;
+        }
+        .contact-info { flex: 1; min-width: 0; }
+        .contact-name { color: white; font-weight: 600; font-size: 16px; margin-bottom: 2px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .contact-status { color: rgba(255, 255, 255, 0.8); font-size: 13px; font-weight: 400; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        .header-icons { display: flex; align-items: center; gap: 16px; color: white; font-size: 20px; }
+
+        .chat-body {
+            background: #E5DDD5;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Cpath d='m129 201c-17.7 0-32 14.3-32 32s14.3 32 32 32 32-14.3 32-32-14.3-32-32-32zm0 52c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20 20zm0-154c-17.7 0-32 14.3-32 32s14.3 32 32 32 32-14.3 32-32-14.3-32-32-32zm0 52c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            padding: 16px; min-height: 460px; position: relative; overflow-y: auto;
+        }
+
+        .message-container { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+        .message-bubble {
+            background: #DCF8C6; color: #000; padding: 8px 12px; border-radius: 7.5px;
+            max-width: 75%; position: relative; box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .message-bubble::before {
+            content: ''; position: absolute; bottom: 0; right: -8px; width: 0; height: 0;
+            border: 8px solid transparent; border-bottom-color: #DCF8C6; border-right: 0;
+            border-bottom-right-radius: 3px; transform: translateX(0px) translateY(0px);
+        }
+        .message-text { font-size: 14px; line-height: 1.4; word-wrap: break-word; margin-bottom: 4px; color: #000; white-space: pre-line; }
+
+        .link-preview {
+            background: #FFFFFF; border-radius: 6px; overflow: hidden; margin-top: 8px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1); border: 1px solid #E5E5EA;
+        }
+        .link-preview-image {
+            width: 100%; height: 100px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex; align-items: center; justify-content: center; color: white;
+            font-size: 32px; position: relative;
+        }
+        .link-preview-content { padding: 10px 12px; }
+        .link-preview-title {
+            color: #1a1a1a; font-weight: 600; font-size: 14px; line-height: 1.2; margin-bottom: 4px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: -webkit-box;
+            line-clamp: 2;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .link-preview-description {
+            color: #65676b; font-size: 12px; line-height: 1.3; margin-bottom: 4px;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; display: -webkit-box;
+            line-clamp: 2;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .link-preview-url { color: #8a8d91; font-size: 11px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-transform: uppercase; font-weight: 500; }
+
+        .message-time {
+            font-size: 11px; color: #999; display: flex; align-items: center; justify-content: flex-end;
+            gap: 4px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin-top: 4px;
+        }
+        .message-status { width: 16px; height: 8px; fill: #4FC3F7; }
+
+        .empty-state { text-align: center; color: #999; padding: 60px 20px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.6; }
+        .empty-state p { font-size: 14px; line-height: 1.4; }
+
+        @media (max-width: 1200px) {
+            .main-container { grid-template-columns: 1fr; gap: 2rem; }
+            .preview-section { position: static; order: -1; }
+            .whatsapp-preview { transform: none; max-width: 400px; margin: 0 auto; }
+            .whatsapp-preview:hover { transform: scale(1.02); }
+        }
+
+        @media (max-width: 768px) {
+            .main-container { padding: 1rem; }
+            .constructor-card { padding: 2rem 1.5rem; border-radius: 24px; }
+            .hero-title { font-size: 3rem; }
+            .utm-grid { grid-template-columns: 1fr; }
+            .copy-btn, .test-btn { width: 100%; margin-right: 0; margin-bottom: 0.5rem; }
+            .phone-frame { border-radius: 28px; padding: 6px; }
+            .chat-body { min-height: 400px; padding: 1rem; }
+            .message-bubble { padding: 0.75rem 1rem; }
+            .link-preview-image { height: 100px; }
+        }
+        @media (max-width: 480px) {
+            .hero-title { font-size: 2.5rem; }
+            .form-input, .form-textarea { font-size: 0.9rem; padding: 1rem; }
+            .message-text { font-size: 0.9rem; }
+            .link-preview-title { font-size: 0.85rem; }
+            .link-preview-description { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="constructor-section">
+            <div class="hero-section">
+                <h1 class="hero-title">Tecnom Link</h1>
+                <p class="hero-subtitle">Constructor de URLs WhatsApp para Concesionarias - Conecta con tus clientes al instante</p>
+            </div>
+
+            <div class="constructor-card">
+                <form id="whatsappForm">
+                    <div class="form-section">
+                        <div class="section-title">🚗 Información de la Concesionaria</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="phone">WHATSAPP DE LA CONCESIONARIA</label>
+                            
+                            <div class="phone-input-group">
+                                <input type="hidden" id="country-code" value="549">
+                                
+                                <div class="custom-select-wrapper" id="customSelect">
+                                    <div class="custom-select-trigger">
+                                        <div style="display:flex; align-items:center; gap:5px;">
+                                            <span id="selected-flag">🇦🇷</span>
+                                            <span id="selected-code">+54 9</span>
+                                        </div>
+                                        <span class="arrow">▼</span>
+                                    </div>
+                                    <div class="custom-options">
+                                        <div class="select-search-container">
+                                            <input type="text" class="select-search" placeholder="Buscar país..." id="countrySearch">
+                                        </div>
+                                        <div class="options-list" id="optionsList">
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                                <input type="tel" 
+                                       id="phone" 
+                                       class="form-input phone-input-split" 
+                                       placeholder="Ej: 1123456789" 
+                                       maxlength="15"
+                                       inputmode="numeric"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+                            <small style="color: var(--celeste-secundario); opacity: 0.7; font-size: 12px; margin-top: 5px; display: block;">* Solo números, sin guiones ni espacios.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="fullMessage">MENSAJE COMPLETO</label>
+                            <textarea id="fullMessage" class="form-textarea" 
+                                      placeholder="Hola, quiero mas info de EL MODELO."
+                                      rows="8"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="url-section">
+                        <div class="section-title">⚙️ Configuración</div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="websiteUrl">URL de la Web</label>
+                            <input type="text" id="websiteUrl" class="form-input" 
+                                   placeholder="concesionaria-premium.com">
+                        </div>
+                        
+                        <div class="utm-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="utm_source">UTM_SOURCE</label>
+                                <label class="form-label">(Origen de la campaña)</label>
+                                <input type="text" id="utm_source" class="form-input" 
+                                       placeholder="whatsapp">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="utm_medium">UTM_MEDIUM</label>
+                                <label class="form-label">(Como se distribuye )</label>
+                                <input type="text" id="utm_medium" class="form-input" 
+                                       placeholder="chat_directo">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="utm_campaign">UTM_CAMPAIGN</label>
+                                <label class="form-label">(Nombre de la campaña)</label>
+                                <input type="text" id="utm_campaign" class="form-input" 
+                                       placeholder="promo_enero">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="resultSection" class="result-section">
+                    <div class="result-title">✅ URL Generada</div>
+                    <div id="urlDisplay" class="url-display"></div>
+                    <button id="copyBtn" class="copy-btn">📋 Copiar URL</button>
+                    <button id="testBtn" class="test-btn">🧪 Probar en WhatsApp</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <div class="whatsapp-preview">
+                <div class="phone-frame">
+                    <div class="volume-up"></div>
+                    <div class="power-button"></div>
+                    <div class="phone-screen">
+                        <div class="status-bar">
+                            <div class="status-left">
+                                <span>9:41</span>
+                            </div>
+                            <div class="status-right">
+                                <div class="signal-bars">
+                                    <span></span><span></span><span></span><span></span>
+                                </div>
+                                <div class="wifi-icon"></div>
+                                <div class="battery"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-header">
+                            <div class="back-arrow">←</div>
+                            <div class="contact-avatar" id="contactAvatar">CO</div>
+                            <div class="contact-info">
+                                <div class="contact-name">Concesionaria Premium</div>
+                                <div class="contact-status">en línea</div>
+                            </div>
+                            <div class="header-icons">
+                                <span>📞</span><span>⋮</span>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-body">
+                            <div id="messageContainer" class="empty-state">
+                                <div class="empty-icon">🚗</div>
+                                <p>Escribe un mensaje para ver cómo se verá en WhatsApp</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGICA DEL SELECTOR PERSONALIZADO ---
+        const countries = [
+            // América del Norte
+            { code: '1', flag: '🇺🇸', name: 'Estados Unidos', label: '+1' },
+            { code: '1', flag: '🇨🇦', name: 'Canadá', label: '+1' },
+            { code: '52', flag: '🇲🇽', name: 'México', label: '+52' },
+            
+            // América Central
+            { code: '501', flag: '🇧🇿', name: 'Belice', label: '+501' },
+            { code: '502', flag: '🇬🇹', name: 'Guatemala', label: '+502' },
+            { code: '503', flag: '🇸🇻', name: 'El Salvador', label: '+503' },
+            { code: '504', flag: '🇭🇳', name: 'Honduras', label: '+504' },
+            { code: '505', flag: '🇳🇮', name: 'Nicaragua', label: '+505' },
+            { code: '506', flag: '🇨🇷', name: 'Costa Rica', label: '+506' },
+            { code: '507', flag: '🇵🇦', name: 'Panamá', label: '+507' },
+            
+            // América del Sur
+            { code: '549', flag: '🇦🇷', name: 'Argentina (Cel)', label: '+54 9' },
+            { code: '591', flag: '🇧🇴', name: 'Bolivia', label: '+591' },
+            { code: '55', flag: '🇧🇷', name: 'Brasil', label: '+55' },
+            { code: '56', flag: '🇨🇱', name: 'Chile', label: '+56' },
+            { code: '57', flag: '🇨🇴', name: 'Colombia', label: '+57' },
+            { code: '593', flag: '🇪🇨', name: 'Ecuador', label: '+593' },
+            { code: '592', flag: '🇬🇾', name: 'Guyana', label: '+592' },
+            { code: '595', flag: '🇵🇾', name: 'Paraguay', label: '+595' },
+            { code: '51', flag: '🇵🇪', name: 'Perú', label: '+51' },
+            { code: '597', flag: '🇸🇷', name: 'Surinam', label: '+597' },
+            { code: '598', flag: '🇺🇾', name: 'Uruguay', label: '+598' },
+            { code: '58', flag: '🇻🇪', name: 'Venezuela', label: '+58' },
+            
+            // Caribe
+            { code: '1264', flag: '🇦🇮', name: 'Anguila', label: '+1-264' },
+            { code: '1268', flag: '🇦🇬', name: 'Antigua y Barbuda', label: '+1-268' },
+            { code: '297', flag: '🇦🇼', name: 'Aruba', label: '+297' },
+            { code: '1242', flag: '🇧🇸', name: 'Bahamas', label: '+1-242' },
+            { code: '1246', flag: '🇧🇧', name: 'Barbados', label: '+1-246' },
+            { code: '1441', flag: '🇧🇲', name: 'Bermudas', label: '+1-441' },
+            { code: '599', flag: '🇧🇶', name: 'Bonaire', label: '+599' },
+            { code: '1345', flag: '🇰🇾', name: 'Islas Caimán', label: '+1-345' },
+            { code: '53', flag: '🇨🇺', name: 'Cuba', label: '+53' },
+            { code: '599', flag: '🇨🇼', name: 'Curazao', label: '+599' },
+            { code: '1767', flag: '🇩🇲', name: 'Dominica', label: '+1-767' },
+            { code: '1809', flag: '🇩🇴', name: 'Rep. Dominicana', label: '+1-809' },
+            { code: '1473', flag: '🇬🇩', name: 'Granada', label: '+1-473' },
+            { code: '590', flag: '🇬🇵', name: 'Guadalupe', label: '+590' },
+            { code: '509', flag: '🇭🇹', name: 'Haití', label: '+509' },
+            { code: '1876', flag: '🇯🇲', name: 'Jamaica', label: '+1-876' },
+            { code: '596', flag: '🇲🇶', name: 'Martinica', label: '+596' },
+            { code: '1664', flag: '🇲🇸', name: 'Montserrat', label: '+1-664' },
+            { code: '1787', flag: '🇵🇷', name: 'Puerto Rico', label: '+1-787' },
+            { code: '1869', flag: '🇰🇳', name: 'San Cristóbal y Nieves', label: '+1-869' },
+            { code: '1758', flag: '🇱🇨', name: 'Santa Lucía', label: '+1-758' },
+            { code: '1784', flag: '🇻🇨', name: 'San Vicente y las Granadinas', label: '+1-784' },
+            { code: '1721', flag: '🇸🇽', name: 'San Martín', label: '+1-721' },
+            { code: '1868', flag: '🇹🇹', name: 'Trinidad y Tobago', label: '+1-868' },
+            { code: '1649', flag: '🇹🇨', name: 'Islas Turcas y Caicos', label: '+1-649' },
+            { code: '1340', flag: '🇻🇮', name: 'Islas Vírgenes (EE.UU.)', label: '+1-340' }
+        ];
+
+        const wrapper = document.getElementById('customSelect');
+        const trigger = wrapper.querySelector('.custom-select-trigger');
+        const optionsList = document.getElementById('optionsList');
+        const searchInput = document.getElementById('countrySearch');
+        const realInput = document.getElementById('country-code');
+        const selectedFlag = document.getElementById('selected-flag');
+        const selectedCode = document.getElementById('selected-code');
+
+        function renderOptions(filterText = '') {
+            optionsList.innerHTML = '';
+            const filtered = countries.filter(c => 
+                c.name.toLowerCase().includes(filterText.toLowerCase()) || 
+                c.label.includes(filterText)
+            );
+
+            if (filtered.length === 0) {
+                optionsList.innerHTML = '<div style="padding:10px; color:rgba(255,255,255,0.5); font-size:12px;">No encontrado</div>';
+                return;
+            }
+
+            filtered.forEach(country => {
+                const div = document.createElement('div');
+                div.className = `custom-option ${country.code === realInput.value ? 'selected' : ''}`;
+                div.innerHTML = `<span style="font-size:1.2rem">${country.flag}</span> <span>${country.name}</span> <span style="margin-left:auto; opacity:0.6; font-size:11px;">${country.label}</span>`;
+                
+                div.addEventListener('click', () => {
+                    selectCountry(country);
+                });
+                optionsList.appendChild(div);
+            });
+        }
+
+        function selectCountry(country) {
+            realInput.value = country.code;
+            selectedFlag.textContent = country.flag;
+            selectedCode.textContent = country.label;
+            wrapper.classList.remove('open');
+            renderOptions();
+            updatePreview(); 
+        }
+
+        trigger.addEventListener('click', () => {
+            wrapper.classList.toggle('open');
+            if(wrapper.classList.contains('open')) {
+                searchInput.value = '';
+                renderOptions();
+                setTimeout(() => searchInput.focus(), 100);
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            renderOptions(e.target.value);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!wrapper.contains(e.target)) {
+                wrapper.classList.remove('open');
+            }
+        });
+
+        renderOptions(); 
+
+        // --- LOGICA DE AUTOLINK PRO ---
+
+        function normalizeUrl(url) {
+            if (!url || !url.trim()) return '';
+            let normalizedUrl = url.trim();
+            if (!normalizedUrl.match(/^https?:\/\//i)) {
+                normalizedUrl = 'https://' + normalizedUrl;
+            }
+            return normalizedUrl;
+        }
+
+        function normalizeUTMParam(value) {
+            if (!value || !value.trim()) return '';
+            return value.trim()
+                .toLowerCase()                    // Convertir a minúsculas
+                .replace(/\s+/g, '_')             // Reemplazar espacios con guiones bajos
+                .replace(/[^a-z0-9_-]/g, '_');    // Reemplazar caracteres especiales con guiones bajos
+        }
+
+        function constructWhatsAppURL(params) {
+            let fullMessage = params.fullMessage;
+            let websiteUrl = normalizeUrl(params.websiteUrl);
+            const urlRegex = /https?:\/\/[^\s]+/g;
+            let urlMatches = fullMessage.match(urlRegex);
+            
+            if (urlMatches) {
+                urlMatches = urlMatches.map(url => normalizeUrl(url));
+                let tempMessage = fullMessage;
+                const originalUrls = fullMessage.match(urlRegex);
+                if (originalUrls) {
+                    originalUrls.forEach((originalUrl, index) => {
+                        tempMessage = tempMessage.replace(originalUrl, urlMatches[index]);
+                    });
+                    fullMessage = tempMessage;
+                }
+            }
+            
+            if ((!urlMatches || urlMatches.length === 0) && websiteUrl) {
+                fullMessage += '\n\n' + websiteUrl;
+                urlMatches = [websiteUrl];
+            }
+            
+            if (urlMatches && urlMatches.length > 0) {
+                const originalUrl = urlMatches[urlMatches.length - 1];
+                const utmParams = [];
+                const normalizedSource = normalizeUTMParam(params.utm_source);
+                const normalizedMedium = normalizeUTMParam(params.utm_medium);
+                const normalizedCampaign = normalizeUTMParam(params.utm_campaign);
+                const normalizedTerm = normalizeUTMParam(params.utm_term);
+                const normalizedContent = normalizeUTMParam(params.utm_content);
+                
+                if (normalizedSource) utmParams.push(`utm_source=${normalizedSource}`);
+                if (normalizedMedium) utmParams.push(`utm_medium=${normalizedMedium}`);
+                if (normalizedCampaign) utmParams.push(`utm_campaign=${normalizedCampaign}`);
+                if (normalizedTerm) utmParams.push(`utm_term=${normalizedTerm}`);
+                if (normalizedContent) utmParams.push(`utm_content=${normalizedContent}`);
+                
+                if (utmParams.length > 0) {
+                    const separator = originalUrl.includes('?') ? '&' : '?';
+                    const urlWithUTM = originalUrl + separator + utmParams.join('&');
+                    const messageWithUTM = fullMessage.replace(originalUrl, urlWithUTM);
+                    const encodedMessage = encodeURIComponent(messageWithUTM);
+                    return `https://wa.me/${params.phone}?text=${encodedMessage}`;
+                }
+            }
+            
+            const encodedMessage = encodeURIComponent(fullMessage);
+            return `https://wa.me/${params.phone}?text=${encodedMessage}`;
+        }
+
+        function updatePreview() {
+            const countryCode = document.getElementById('country-code').value;
+            const phoneNumber = document.getElementById('phone').value;
+            const fullPhone = countryCode + phoneNumber;
+
+            const params = {
+                phone: fullPhone,
+                fullMessage: document.getElementById('fullMessage').value,
+                websiteUrl: document.getElementById('websiteUrl').value,
+                utm_source: document.getElementById('utm_source').value,
+                utm_medium: document.getElementById('utm_medium').value,
+                utm_campaign: document.getElementById('utm_campaign').value
+            };
+            
+            const url = constructWhatsAppURL(params);
+            
+            const contactName = params.phone ? params.phone.slice(-4) : 'AUTO';
+            document.getElementById('contactAvatar').textContent = contactName.slice(0, 2);
+            
+            if (!params.fullMessage.trim()) {
+                document.getElementById('messageContainer').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🚗</div>
+                        <p>Escribe un mensaje para ver cómo se verá en WhatsApp</p>
+                    </div>
+                `;
+                document.getElementById('resultSection').style.display = 'none';
+                return;
+            }
+            
+            const fullText = params.fullMessage;
+            const urlRegex = /https?:\/\/[^\s]+/g;
+            let urlMatches = fullText.match(urlRegex);
+            let hasUrl = urlMatches && urlMatches.length > 0;
+            
+            if (!hasUrl && params.websiteUrl.trim()) {
+                const normalizedWebUrl = normalizeUrl(params.websiteUrl.trim());
+                if (normalizedWebUrl) {
+                    urlMatches = [normalizedWebUrl];
+                    hasUrl = true;
+                }
+            } else if (hasUrl && urlMatches) {
+                urlMatches = urlMatches.map(url => normalizeUrl(url));
+            }
+            
+            const lines = fullText.split('\n').filter(line => line.trim());
+            const messageText = lines[0] || '';
+            const textWithoutUrl = fullText.replace(urlRegex, '').trim();
+            const vehicleLines = textWithoutUrl.split('\n').filter(line => line.trim());
+            
+            let linkTitle = 'Vehículo Disponible';
+            let linkDescription = 'Ver detalles, precio y financiación';
+            
+            if (vehicleLines.length > 1) {
+                const vehicleLine = vehicleLines.find(line => 
+                    line.toLowerCase().includes('toyota') || 
+                    line.toLowerCase().includes('ford') ||
+                    line.toLowerCase().includes('chevrolet') ||
+                    line.toLowerCase().includes('volkswagen') ||
+                    line.toLowerCase().includes('fiat') ||
+                    line.toLowerCase().includes('peugeot') ||
+                    line.toLowerCase().includes('renault') ||
+                    line.includes('2020') || line.includes('2021') ||
+                    line.includes('2022') || line.includes('2023') ||
+                    line.includes('2024') ||
+                    line.toLowerCase().includes('automático') ||
+                    line.toLowerCase().includes('manual')
+                ) || vehicleLines[1];
+                
+                if (vehicleLine) {
+                    linkTitle = vehicleLine;
+                    linkDescription = vehicleLines.slice(2).join(' - ').substring(0, 100) || 'Ver detalles, precio y financiación';
+                }
+            }
+            
+            const currentTime = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+            const messageContainer = document.getElementById('messageContainer');
+            
+            let linkPreviewHTML = '';
+            if (hasUrl) {
+                let domain = 'concesionaria.com';
+                try { domain = new URL(urlMatches[urlMatches.length - 1]).hostname; } catch (e) { }
+                
+                linkPreviewHTML = `
+                    <div class="link-preview">
+                        <div class="link-preview-image">🚘</div>
+                        <div class="link-preview-content">
+                            <div class="link-preview-title">${linkTitle}</div>
+                            <div class="link-preview-description">${linkDescription}</div>
+                            <div class="link-preview-url">${domain}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            messageContainer.innerHTML = `
+                <div class="message-container">
+                    <div class="message-bubble">
+                        <div class="message-text">${messageText}</div>
+                        ${linkPreviewHTML}
+                        <div class="message-time">
+                            ${currentTime}
+                            <svg class="message-status" viewBox="0 0 16 11" fill="currentColor">
+                                <path d="M11.071.643a1 1 0 0 1 1.414 0l3.54 3.536a1 1 0 0 1 0 1.414l-7.07 7.071a1 1 0 0 1-1.415 0L3.07 8.196a1 1 0 1 1 1.414-1.414L8 10.268l6.657-6.625a.502.502 0 0 1 .414 0z"/>
+                                <path d="M6.071.643a1 1 0 0 1 1.414 0l3.54 3.536a1 1 0 0 1 0 1.414l-7.07 7.071a1 1 0 0 1-1.415 0L-1.93 8.196a1 1 0 1 1 1.414-1.414L3 10.268l6.657-6.625a.502.502 0 0 1 .414 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            if (phoneNumber.trim() && params.fullMessage.trim()) {
+                document.getElementById('urlDisplay').textContent = url;
+                document.getElementById('resultSection').style.display = 'block';
+            } else {
+                document.getElementById('resultSection').style.display = 'none';
+            }
+        }
+
+        document.getElementById('websiteUrl').addEventListener('blur', function() {
+            const input = this;
+            const normalizedUrl = normalizeUrl(input.value);
+            if (normalizedUrl !== input.value && normalizedUrl) {
+                input.value = normalizedUrl;
+                updatePreview();
+            }
+        });
+
+        // Normalizar parámetros UTM automáticamente
+        ['utm_source', 'utm_medium', 'utm_campaign'].forEach(function(fieldId) {
+            document.getElementById(fieldId).addEventListener('blur', function() {
+                const input = this;
+                const normalizedValue = normalizeUTMParam(input.value);
+                if (normalizedValue !== input.value) {
+                    input.value = normalizedValue;
+                    updatePreview();
+                }
+            });
+        });
+
+        document.querySelectorAll('input, textarea').forEach(input => {
+            if(input.id === 'countrySearch') return; 
+            input.addEventListener('input', updatePreview);
+            input.addEventListener('keyup', updatePreview);
+            input.addEventListener('change', updatePreview);
+            input.addEventListener('paste', () => setTimeout(updatePreview, 10));
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const urlText = document.getElementById('urlDisplay').textContent;
+            navigator.clipboard.writeText(urlText).then(function() {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = '✅ ¡Copiado!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        });
+
+        document.getElementById('testBtn').addEventListener('click', function() {
+            const urlText = document.getElementById('urlDisplay').textContent;
+            window.open(urlText, '_blank');
+        });
+
+        updatePreview();
+    </script>
+</body>
+</html>
