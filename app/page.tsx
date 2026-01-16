@@ -546,7 +546,9 @@ export default function Home() {
                     <label className="form-label" htmlFor="utm_source">
                       UTM_SOURCE
                     </label>
-                    <label className="form-label">(Origen de la campaña)</label>
+                    <label className="form-label">
+                      (lo vas a ver como origen de Nubux)
+                    </label>
                     <input
                       type="text"
                       id="utm_source"
@@ -559,7 +561,9 @@ export default function Home() {
                     <label className="form-label" htmlFor="utm_medium">
                       UTM_MEDIUM
                     </label>
-                    <label className="form-label">(Como se distribuye )</label>
+                    <label className="form-label">
+                      (lo vas a ver como medio en Nubux)
+                    </label>
                     <input
                       type="text"
                       id="utm_medium"
@@ -572,7 +576,9 @@ export default function Home() {
                     <label className="form-label" htmlFor="utm_campaign">
                       UTM_CAMPAIGN
                     </label>
-                    <label className="form-label">(Nombre de la campaña)</label>
+                    <label className="form-label">
+                      (lo vas a ver como campaña en Nubux)
+                    </label>
                     <input
                       type="text"
                       id="utm_campaign"
