@@ -553,7 +553,7 @@ export default function Home() {
                       type="text"
                       id="utm_source"
                       className="form-input"
-                      placeholder="whatsapp"
+                      placeholder="web_site"
                     />
                   </div>
 
@@ -568,7 +568,7 @@ export default function Home() {
                       type="text"
                       id="utm_medium"
                       className="form-input"
-                      placeholder="chat_directo"
+                      placeholder="whatsapp"
                     />
                   </div>
 
