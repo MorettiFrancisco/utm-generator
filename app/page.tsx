@@ -79,10 +79,10 @@ export default function Home() {
     const trigger = wrapper?.querySelector(".custom-select-trigger");
     const optionsList = document.getElementById("optionsList");
     const searchInput = document.getElementById(
-      "countrySearch"
+      "countrySearch",
     ) as HTMLInputElement | null;
     const realInput = document.getElementById(
-      "country-code"
+      "country-code",
     ) as HTMLInputElement | null;
     const selectedFlag = document.getElementById("selected-flag");
     const selectedCode = document.getElementById("selected-code");
@@ -262,7 +262,7 @@ export default function Home() {
               line.includes("2023") ||
               line.includes("2024") ||
               line.toLowerCase().includes("automático") ||
-              line.toLowerCase().includes("manual")
+              line.toLowerCase().includes("manual"),
           ) || vehicleLines[1];
 
         if (vehicleLine) {
@@ -331,7 +331,7 @@ export default function Home() {
       const filtered = countries.filter(
         (c) =>
           c.name.toLowerCase().includes(filterText.toLowerCase()) ||
-          c.label.includes(filterText)
+          c.label.includes(filterText),
       );
 
       if (filtered.length === 0) {
@@ -378,7 +378,7 @@ export default function Home() {
     });
 
     const websiteUrlInput = document.getElementById(
-      "websiteUrl"
+      "websiteUrl",
     ) as HTMLInputElement | null;
     websiteUrlInput?.addEventListener("blur", function () {
       const normalizedUrl = normalizeUrl(this.value);
@@ -547,7 +547,7 @@ export default function Home() {
                       UTM_SOURCE
                     </label>
                     <label className="form-label">
-                      (lo vas a ver como origen de Nubux)
+                      (lo vas a ver como origen de Tecnom Sales)
                     </label>
                     <input
                       type="text"
@@ -562,7 +562,7 @@ export default function Home() {
                       UTM_MEDIUM
                     </label>
                     <label className="form-label">
-                      (lo vas a ver como medio en Nubux)
+                      (lo vas a ver como medio en Tecnom Sales)
                     </label>
                     <input
                       type="text"
@@ -577,7 +577,7 @@ export default function Home() {
                       UTM_CAMPAIGN
                     </label>
                     <label className="form-label">
-                      (lo vas a ver como campaña en Nubux)
+                      (lo vas a ver como campaña en Tecnom Sales)
                     </label>
                     <input
                       type="text"
