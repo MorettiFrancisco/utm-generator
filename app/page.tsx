@@ -124,6 +124,8 @@ export default function Home() {
       utm_source: string;
       utm_medium: string;
       utm_campaign: string;
+      utm_term: string;
+      utm_content: string;
     }) => {
       let fullMessage = params.fullMessage;
       const websiteUrl = normalizeUrl(params.websiteUrl);
@@ -153,11 +155,16 @@ export default function Home() {
         const normalizedSource = normalizeUTMParam(params.utm_source);
         const normalizedMedium = normalizeUTMParam(params.utm_medium);
         const normalizedCampaign = normalizeUTMParam(params.utm_campaign);
+        const normalizedTerm = normalizeUTMParam(params.utm_term);
+        const normalizedContent = normalizeUTMParam(params.utm_content);
 
         if (normalizedSource) utmParams.push(`utm_source=${normalizedSource}`);
         if (normalizedMedium) utmParams.push(`utm_medium=${normalizedMedium}`);
         if (normalizedCampaign)
           utmParams.push(`utm_campaign=${normalizedCampaign}`);
+        if (normalizedTerm) utmParams.push(`utm_term=${normalizedTerm}`);
+        if (normalizedContent)
+          utmParams.push(`utm_content=${normalizedContent}`);
 
         if (utmParams.length > 0) {
           const separator = originalUrl.includes("?") ? "&" : "?";
@@ -197,6 +204,12 @@ export default function Home() {
             ?.value || "",
         utm_campaign:
           (document.getElementById("utm_campaign") as HTMLInputElement | null)
+            ?.value || "",
+        utm_term:
+          (document.getElementById("utm_term") as HTMLInputElement | null)
+            ?.value || "",
+        utm_content:
+          (document.getElementById("utm_content") as HTMLInputElement | null)
             ?.value || "",
       };
 
@@ -388,7 +401,13 @@ export default function Home() {
       }
     });
 
-    ["utm_source", "utm_medium", "utm_campaign"].forEach((fieldId) => {
+    [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+    ].forEach((fieldId) => {
       const input = document.getElementById(fieldId) as HTMLInputElement | null;
       input?.addEventListener("blur", function () {
         const normalizedValue = normalizeUTMParam(this.value);
@@ -544,7 +563,7 @@ export default function Home() {
                 <div className="utm-grid">
                   <div className="form-group">
                     <label className="form-label" htmlFor="utm_source">
-                      UTM_SOURCE
+                      UTM_SOURCE (obligatorio)
                     </label>
                     <label className="form-label">
                       (lo vas a ver como origen de Tecnom Sales)
@@ -553,13 +572,13 @@ export default function Home() {
                       type="text"
                       id="utm_source"
                       className="form-input"
-                      placeholder="web_site"
+                      placeholder="web"
                     />
                   </div>
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="utm_medium">
-                      UTM_MEDIUM
+                      UTM_MEDIUM (obligatorio)
                     </label>
                     <label className="form-label">
                       (lo vas a ver como medio en Tecnom Sales)
@@ -568,13 +587,13 @@ export default function Home() {
                       type="text"
                       id="utm_medium"
                       className="form-input"
-                      placeholder="whatsapp"
+                      placeholder="cpc"
                     />
                   </div>
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="utm_campaign">
-                      UTM_CAMPAIGN
+                      UTM_CAMPAIGN (obligatorio)
                     </label>
                     <label className="form-label">
                       (lo vas a ver como campaña en Tecnom Sales)
@@ -583,7 +602,37 @@ export default function Home() {
                       type="text"
                       id="utm_campaign"
                       className="form-input"
-                      placeholder="promo_enero"
+                      placeholder="lanzamiento_corolla_ar_2026"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="utm_term">
+                      UTM_TERM (opcional)
+                    </label>
+                    <label className="form-label">
+                      (palabra clave o segmentación, típico de Google Ads)
+                    </label>
+                    <input
+                      type="text"
+                      id="utm_term"
+                      className="form-input"
+                      placeholder="autos_usados"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label" htmlFor="utm_content">
+                      UTM_CONTENT (opcional)
+                    </label>
+                    <label className="form-label">
+                      (diferencia avisos o creatividades de una misma campaña)
+                    </label>
+                    <input
+                      type="text"
+                      id="utm_content"
+                      className="form-input"
+                      placeholder="imagen_suv"
                     />
                   </div>
                 </div>
