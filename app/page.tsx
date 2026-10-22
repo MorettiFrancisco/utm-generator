@@ -11,7 +11,6 @@ import {
   buildWhatsAppLink,
   normalizeUTMParam,
   EMPTY_UTM,
-  GUIDE_URL,
   RECOMMENDED_MEDIUMS,
   RECOMMENDED_SOURCES,
   REQUIRED_UTM,
@@ -188,7 +187,7 @@ export default function Home() {
     <div className="min-h-screen">
       {/* TopBar (spec §5.9): 64px, blanco, sombra, padding 12/20 */}
       <header className="bg-white shadow-sm">
-        <div className="mx-auto flex min-h-16 max-w-[1280px] flex-wrap items-center justify-between gap-3 px-5 py-3">
+        <div className="mx-auto flex min-h-16 max-w-[1280px] items-center px-5 py-3">
           {/* PageHeader (spec §5.15): glifo Regular primary-600 + título */}
           <div className="flex items-center gap-3">
             <Icon name="link" size={24} className="shrink-0 text-primary-600" />
@@ -199,14 +198,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <a
-            href={GUIDE_URL}
-            target="_blank"
-            rel="noreferrer"
-            className={buttonClass("neutral", "sm")}
-          >
-            Guía de parámetros UTM
-          </a>
         </div>
       </header>
 
